@@ -36,10 +36,12 @@ group :development, :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem 'orderly'
   gem 'active_designer'
-  gem 'rubocop'
   gem 'rspec-rails'
   gem 'capybara'
   gem 'simplecov'
+  gem 'fast_jsonapi'
+  gem 'factory_bot_rails'
+  gem 'faker'
 end
 
 group :development do
