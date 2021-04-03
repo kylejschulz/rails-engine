@@ -1,28 +1,36 @@
 class Api::V1::ItemsController < ApplicationController
+  before_action :set_per_page, :set_page, only: [:index]
+  before_action :set_item, only: [:show, :destroy, :update]
+
   def index
-    render :json ItemSerializer.new(Item.all.first(20))
+    @items = Item.limit(@limit).offset(@page * @limit)
+    render json: ItemSerializer.new(@items)
   end
 
   def show
-    render :json ItemSerializer.new(Item.find(params[:id]))
+    render json: ItemSerializer.new(@item)
   end
 
   def create
-    render :json ItemSerializer.new(Item.new(item_params))
+    render json: ItemSerializer.new(Item.create!(item_params))
   end
 
   def update
-    render :json ItemSerializer.new(Item.update(item_params))
+    render json: ItemSerializer.new(@item.update!(item_params))
   end
 
   def destroy
-    Item.destroy(params[:id])
-    render :json "Successfully destroyed"
+    Item.destroy(@mercant)
+    render json: "Successfully destroyed"
   end
 
   private
 
   def item_params
-    params.permit(?)
+    params.permit(:name, :description, :unit_price, :mercant_id)
+  end
+
+  def set_item
+    @item = Item.find(params[:id])
   end
 end
