@@ -1,14 +1,14 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      get "merchants/find_one", to: "search#merchant_find_one"
+      get "items/find_all", to: "search#item_find_all"
       resources :merchants, only: [:index, :show] do
-        resources :items, only: [:index], :merchant_items
+        resources :items, only: [:index], controller: :merchant_items
       end
-      #add get request and index action for merchantitems controller
       resources :items do
-        resources :meerchants, only: [:show], :item_merchants
+        resources :merchants, only: [:show], controller: :item_merchants
       end
-      #add get request and show action for item merchant controller
     end
   end
 end

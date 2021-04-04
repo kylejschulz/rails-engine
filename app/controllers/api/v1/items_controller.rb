@@ -3,31 +3,33 @@ class Api::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:show, :destroy, :update]
 
   def index
-    @items = Item.limit(@limit).offset(@page * @limit)
-    render json: ItemSerializer.new(@items)
+    items = Item.limit(@limit).offset(@page * @limit)
+    render json: ItemSerializer.new(items), status: 200
   end
 
   def show
-    render json: ItemSerializer.new(@item)
+    render json: ItemSerializer.new(@item), status: 200
   end
 
   def create
-    render json: ItemSerializer.new(Item.create!(item_params))
+    item = Item.create!(item_params)
+    render json: ItemSerializer.new(item), status: 201
   end
 
   def update
-    render json: ItemSerializer.new(@item.update!(item_params))
+    @item.update!(item_params)
+    render json: ItemSerializer.new(@item), status: 200
   end
 
   def destroy
-    Item.destroy(@mercant)
-    render json: "Successfully destroyed"
+    Item.destroy(@item.id)
+    render json: "destroyed", status: 200
   end
 
   private
 
   def item_params
-    params.permit(:name, :description, :unit_price, :mercant_id)
+    params.permit(:id, :name, :description, :unit_price, :merchant_id)
   end
 
   def set_item

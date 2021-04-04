@@ -117,4 +117,8 @@ RSpec.describe "When i visit the merchant index api" do
       JSON.parse(response.body, symbolize_names: true)
     end
   end
+
+    # expect(response).to have_http_status(:success)
+    # expect(response).to have_http_status(:created)
+    # expect(hash_body.keys).to match_array([:id, :ingredients, :instructions])
 end

@@ -12,7 +12,6 @@ RSpec.describe "when i visit the item show endpoint" do
       expect(response).to be_successful
 
       response = parse(@response)
-
       expect(response[:data]).to have_key(:id)
       expect(response[:data][:id]).to be_a(String)
       expect(response[:data][:id].to_i).to eq(@item_1.id)
@@ -29,17 +28,24 @@ RSpec.describe "when i visit the item show endpoint" do
       expect(response[:data][:attributes][:description]).to eq(@item_1.description)
 
       expect(response[:data][:attributes]).to have_key(:unit_price)
-      expect(response[:data][:attributes][:unit_price]).to be_a(String)
+      expect(response[:data][:attributes][:unit_price]).to be_a(Float)
       expect(response[:data][:attributes][:unit_price]).to eq(@item_1.unit_price)
 
       expect(response[:data][:attributes]).to have_key(:merchant_id)
-      expect(response[:data][:attributes][:merchant_id]).to be_a(String)
+      expect(response[:data][:attributes][:merchant_id]).to be_a(Integer)
       expect(response[:data][:attributes][:merchant_id]).to eq(@item_1.merchant_id)
 
       expect(response[:data][:attributes]).to_not have_key(:created_at)
       expect(response[:data][:attributes]).to_not have_key(:updated_at)
     end
-  end
+
+    it "returns 404 with invalid item id" do
+      get "/api/v1/items/1000000"
+
+      expect(response).not_to be_successful
+      expect(response.status).to eq(404)
+    end
+  end 
 
   def parse(response)
     JSON.parse(response.body, symbolize_names: true)

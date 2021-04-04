@@ -5,11 +5,11 @@ class Api::V1::MerchantsController < ApplicationController
 
   def index
     @merchants = Merchant.limit(@limit).offset(@page * @limit)
-    render json: MerchantSerializer.new(@merchants)
+    render json: MerchantSerializer.new(@merchants), status: 200
   end
 
   def show
-    render json: MerchantSerializer.new(Merchant.find(params[:id]))
+    render json: MerchantSerializer.new(Merchant.find(params[:id])), status: 200
   end
 
   private
