@@ -9,7 +9,7 @@ RSpec.describe "when i visit the item find_all endpoint, i can find a item" do
 
   describe "When i put in query params, i get one item that matches that crteria" do
     it "searches for a valid item" do
-      get "/api/v1/items/find_one?name=ring"
+      get "/api/v1/items/find_all?name=ring"
 
       expect(response).to be_successful
       response = parse(@response)
@@ -31,13 +31,37 @@ RSpec.describe "when i visit the item find_all endpoint, i can find a item" do
       expect(response[:data][:attributes]).to_not have_key(:created_at)
       expect(response[:data][:attributes]).to_not have_key(:updated_at)
     end
+
     it "can return an array if there are no matches" do
       get "/api/v1/items/find_one?name=a"
 
       expect(response).to be_successful
       response = parse(@response)
       expect(response[:data]).to eq([])
+    end
 
+    it "can return all the matches for min_price" do
+      get "/api/v1/items/find_one?min_price=100"
+
+      expect(response).to be_successful
+      response = parse(@response)
+      expect(response[:data]).to eq([])
+    end
+
+    it "can return all the matches for max_price" do
+      get "/api/v1/items/find_one?max_price=1000"
+
+      expect(response).to be_successful
+      response = parse(@response)
+      expect(response[:data]).to eq([])
+    end
+
+    it "can return all the matches for min_price and max_price" do
+      get "/api/v1/items/find_all?min_price=100&max_price=1000"
+
+      expect(response).to be_successful
+      response = parse(@response)
+      expect(response[:data]).to eq([])
     end
 
     it "returns the first one alphabetically" do

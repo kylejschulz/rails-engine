@@ -3,7 +3,7 @@ class Api::V1::MerchantItemsController < ApplicationController
   before_action :set_per_page, :set_page, only: [:index]
 
   def index
-    @items = @merchant.items.limit(@limit).offset(@page * @limit)
+    @items = @merchant.items
     render json: ItemSerializer.new(@items), status: 200
   end
 

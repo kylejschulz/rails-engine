@@ -9,7 +9,7 @@ RSpec.describe "when i visit the merchant find_one endpoint, i can find a mercha
 
   describe "When i put in query params, i get one merchant that matches that crteria" do
     it "searches for a valid merchant" do
-      get "/api/v1/merchants/find_one?name=ring"
+      get "/api/v1/merchants/find?name=ring"
 
       expect(response).to be_successful
       response = parse(@response)
@@ -32,11 +32,11 @@ RSpec.describe "when i visit the merchant find_one endpoint, i can find a mercha
       expect(response[:data][:attributes]).to_not have_key(:updated_at)
     end
     it "can return no matches" do
-      get "/api/v1/merchants/find_one?name=a"
+      get "/api/v1/merchants/find?name=a"
 
       expect(response).to be_successful
       response = parse(@response)
-      expect(response[:data]).to be_nil
+      expect(response[:data]).to eq({})
 
     end
 
@@ -46,14 +46,14 @@ RSpec.describe "when i visit the merchant find_one endpoint, i can find a mercha
       @merchant_24 = create(:merchant, name: 'Aaa')
       @merchant_25 = create(:merchant, name: 'aaa')
 
-      get "/api/v1/merchants/find_one?name=AAA"
+      get "/api/v1/merchants/find?name=AAA"
 
       expect(response).to be_successful
       response = parse(@response)
 
       expect(response[:data]).to have_key(:attributes)
-      expect(response[:data][:attributes]).to have_key(:id)
-      expect(response[:data][:attributes][:id].to_i).to eq(@merchant_22.id)
+      expect(response[:data]).to have_key(:id)
+      expect(response[:data][:id].to_i).to eq(@merchant_22.id)
       expect(response[:data][:attributes]).to have_key(:name)
       expect(response[:data][:attributes][:name]).to eq(@merchant_22.name)
     end

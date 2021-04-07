@@ -9,6 +9,6 @@ class Merchant < ApplicationRecord
   end
 
   def self.find_all(search)
-
+    require "pry"; binding.pry
   end
 end
