@@ -5,43 +5,42 @@ class Item < ApplicationRecord
 
 
   def self.find_all(args)
-    if args[:name].nil?
-      min_or_max(args)
+    if args[:name]
+      name_search(args[:name])
     else
-      name(args[:name])
+      min_or_max(args)
     end
-
   end
 
-  def min_or_max(args)
-    if !args[:min_price].nil? && !args[:max_price].nil?
+  def self.min_or_max(args)
+    if args[:min_price] && args[:max_price]
       min_and_max(args)
-    elsif !args[:min_price].nil?
-      max_price(args[:max_price])
-    else !args[:max_price].nil?
+    elsif args[:min_price]
       min_price(args[:min_price])
+    else args[:max_price]
+      max_price(args[:max_price])
     end
   end
 
-  def min_and_max(args)
+  def self.min_and_max(args)
     min = args[:min_price]
     max = args[:max_price]
-    Items.where("unit_price < ? AND unit_price > ?", min, max).order(unit_price: :asc)
+    Item.where("unit_price > ? AND unit_price < ?", min, max).order(:unit_price)
 
   end
 
-  def min_price(min_price)
-    min = args[:min_price]
-    Items.where("unit_price < ?", min).order(unit_price: :asc)
+  def self.min_price(args)
+    min = args
+    Item.where("unit_price < ?", min).order(unit_price: :asc)
   end
 
-  def max_price(max_price)
-    max = args[:max_price]
-    Items.where("unit_price > ?", max).order(unit_price: :asc)
+  def self.max_price(args)
+    max = args
+    Item.where("unit_price > ?", max).order(unit_price: :asc)
   end
 
-  def name(search)
+  def self.name_search(search)
     name = search.downcase
-    Items.where("NAME ILike ?", "%#{name}%").order(name: :asc)
+    Item.where("NAME ILike ? or DESCRIPTION Like ?", "%#{name}%", "%#{name}%").order(:name)
   end
 end
