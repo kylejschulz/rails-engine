@@ -41,6 +41,6 @@ class Item < ApplicationRecord
 
   def self.name_search(search)
     name = search.downcase
-    Item.where("NAME ILike ? or DESCRIPTION Like ?", "%#{name}%", "%#{name}%").order(:name)
+    Item.where("NAME ILike ?", "%#{name}%").order(:name)
   end
 end
