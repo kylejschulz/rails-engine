@@ -5,11 +5,12 @@ class Invoice < ApplicationRecord
   has_many :merchants, through: :items
   has_many :transactions
 
-  def revenue_of_unshipped_successful_transactions
-    Transaction
+  def self.revenue_of_unshipped_successful_transactions
+    joins(:transactions)
     .where('result = ?', "success")
     .where('status != ?', "shipped")
-    .pluck('sum(invoice_items.quantity * invoice_items.unit_price) AS revenue')
-    #how do i compress all of these down into one row and add the sum?
+    .select('invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) AS revenue')
+    .group(:id)
+    .order('revenue DESC')
   end
 end
