@@ -1,7 +1,6 @@
 class Api::V1::RevenueController < ApplicationController
   def merchants_with_most_revenue
-    require "pry"; binding.pry
-    @merchants = Merchant.with_most_revenue(merchant_most_revenue_params)
+    @merchants = Merchant.with_most_revenue(merchant_most_revenue_params[:quantity])
     render json: MerchantNameRevenueSerializer.new(@merchants), status: 200
   end
 

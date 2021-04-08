@@ -3,7 +3,6 @@ class Item < ApplicationRecord
   has_many :invoice_items
   has_many :invoices, through: :invoice_items
 
-
   def self.find_all(args)
     if args[:name]
       name_search(args[:name])
@@ -31,12 +30,12 @@ class Item < ApplicationRecord
 
   def self.min_price(args)
     min = args
-    Item.where("unit_price < ?", min).order(unit_price: :asc)
+    Item.where("unit_price > ?", min).order(unit_price: :asc)
   end
 
   def self.max_price(args)
     max = args
-    Item.where("unit_price > ?", max).order(unit_price: :asc)
+    Item.where("unit_price < ?", max).order(unit_price: :asc)
   end
 
   def self.name_search(search)
