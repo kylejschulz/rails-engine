@@ -7,79 +7,74 @@ RSpec.describe "when i visit the item find_all endpoint, i can find a item" do
     @items = create_list(:item, 20)
   end
 
-  describe "When i put in query params, i get one item that matches that crteria" do
-    it "searches for a valid item" do
+  describe "When i put in query params, i get all items that matches that crteria" do
+    it "searches for a valid items" do
       get "/api/v1/items/find_all?name=ring"
 
-      expect(response).to be_successful
+      expect(@response).to be_successful
       response = parse(@response)
-      expect(response[:data]).to have_key(:id)
-      expect(response[:data][:id]).to be_a(String)
-      expect(response[:data][:id].to_i).to eq(@items[0].id)
+      response[:data].each do |response|
+        expect(response).to have_key(:id)
+        expect(response[:id]).to be_a(String)
 
-      expect(response[:data]).to have_key(:type)
-      expect(response[:data][:type]).to be_a(String)
-      expect(response[:data][:type].capitalize).to eq(@items[0].class.to_s)
+        expect(response).to have_key(:type)
+        expect(response[:type]).to be_a(String)
 
-      expect(response[:data]).to have_key(:attributes)
-      expect(response[:data][:attributes]).to be_a(Hash)
+        expect(response).to have_key(:attributes)
+        expect(response[:attributes]).to be_a(Hash)
 
-      expect(response[:data][:attributes]).to have_key(:name)
-      expect(response[:data][:attributes][:name]).to be_a(String)
-      expect(response[:data][:attributes][:name]).to eq(@items[0].name)
+        expect(response[:attributes]).to have_key(:name)
+        expect(response[:attributes][:name]).to be_a(String)
 
-      expect(response[:data][:attributes]).to_not have_key(:created_at)
-      expect(response[:data][:attributes]).to_not have_key(:updated_at)
+        expect(response[:attributes]).to_not have_key(:created_at)
+        expect(response[:attributes]).to_not have_key(:updated_at)
+      end
     end
 
     it "can return an array if there are no matches" do
-      get "/api/v1/items/find_one?name=a"
+      get "/api/v1/items/find_all?name=a"
 
-      expect(response).to be_successful
+      expect(@response).to be_successful
       response = parse(@response)
       expect(response[:data]).to eq([])
     end
 
     it "can return all the matches for min_price" do
-      get "/api/v1/items/find_one?min_price=100"
+      get "/api/v1/items/find_all?min_price=100"
 
-      expect(response).to be_successful
+      expect(@response).to be_successful
       response = parse(@response)
       expect(response[:data]).to eq([])
     end
 
     it "can return all the matches for max_price" do
-      get "/api/v1/items/find_one?max_price=1000"
+      get "/api/v1/items/find_all?max_price=1000"
 
-      expect(response).to be_successful
+      expect(@response).to be_successful
       response = parse(@response)
-      expect(response[:data]).to eq([])
+      expect(response[:data].count).to eq(21)
+      expect(response[:data].first).to have_key(:id)
+      expect(response[:data].first[:id]).to be_a(String)
+
+      expect(response[:data].first).to have_key(:type)
+      expect(response[:data].first[:type]).to be_a(String)
+
+      expect(response[:data].first).to have_key(:attributes)
+      expect(response[:data].first[:attributes]).to be_a(Hash)
+
+      expect(response[:data].first[:attributes]).to have_key(:name)
+      expect(response[:data].first[:attributes][:name]).to be_a(String)
+
+      expect(response[:data].first[:attributes]).to_not have_key(:created_at)
+      expect(response[:data].first[:attributes]).to_not have_key(:updated_at)
     end
 
     it "can return all the matches for min_price and max_price" do
       get "/api/v1/items/find_all?min_price=100&max_price=1000"
 
-      expect(response).to be_successful
+      expect(@response).to be_successful
       response = parse(@response)
       expect(response[:data]).to eq([])
-    end
-
-    it "returns the first one alphabetically" do
-      @item_22 = create(:item, name: 'AAA')
-      @item_23 = create(:item, name: 'AAa')
-      @item_24 = create(:item, name: 'Aaa')
-      @item_25 = create(:item, name: 'aaa')
-
-      get "/api/v1/items/find_one?name=AAA"
-
-      expect(response).to be_successful
-      response = parse(@response)
-
-      expect(response[:data]).to have_key(:attributes)
-      expect(response[:data][:attributes]).to have_key(:id)
-      expect(response[:data][:attributes][:id].to_i).to eq(@item_22.id)
-      expect(response[:data][:attributes]).to have_key(:name)
-      expect(response[:data][:attributes][:name]).to eq(@item_22.name)
     end
   end
 
