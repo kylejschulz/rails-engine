@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "When I visit /api/v1/revenue/merchants/:id i see the revenue for that merchant" do
+RSpec.describe "When I visit /api/v1/revenue/unshipped i see the potential revenue for those invoices" do
   describe "the json returns merchant id, type, and attributes of revenue" do
     it "can visit the page and return the revenue" do
       @merchant = create(:merchant)
@@ -59,9 +59,9 @@ RSpec.describe "When I visit /api/v1/revenue/merchants/:id i see the revenue for
       @transaction_9 = create(:transaction, invoice_id: @invoice_9.id, result: "success")
       # item has shipped and transaction is successful
 
-      get "/api/v1/revenue/merchants/#{@merchant.id}"
-
+      get "/api/v1/revenue/unshipped"
       response = parse(@response)
+      require "pry"; binding.pry
 
       expect(response[:data]).to have_key(:id)
       expect(response[:data][:id]).to be_a(String)
@@ -78,26 +78,8 @@ RSpec.describe "When I visit /api/v1/revenue/merchants/:id i see the revenue for
       expect(response[:data][:attributes][:revenue]).to be_a(Float)
       expect(response[:data][:attributes][:revenue]).to eq(45.00)
     end
-
-    # it "returns an error if given an invalid merchant id" do
-    #   @merchant = create(:merchant)
-    #   # @items = create_list(:item, , merchant_id: @merchant.id)
-    #   # item has shipped and transaction is successful
-    #
-    #   get "/api/v1/revenue/merchants/999999999"
-    #
-    #   response = parse(@response)
-    #   expect(response).to be_successful?
-    #   expect(response[:data]).to
-    # end
   end
   def parse(response)
     JSON.parse(response.body, symbolize_names: true)
   end
 end
-
-
-# total revenue for a given merchant
-
-
-# total revenue of successful invoices which have not yet been shipped
