@@ -69,14 +69,14 @@ RSpec.describe "When I visit /api/v1/revenue/merchants/:id i see the revenue for
 
       expect(response[:data]).to have_key(:type)
       expect(response[:data][:type]).to be_a(String)
-      expect(response[:data][:type].capitalize).to eq("merchant_revenue")
+      expect(response[:data][:type].capitalize).to eq("Merchant_revenue")
 
       expect(response[:data]).to have_key(:attributes)
       expect(response[:data][:attributes]).to be_a(Hash)
 
       expect(response[:data][:attributes]).to have_key(:revenue)
       expect(response[:data][:attributes][:revenue]).to be_a(Float)
-      expect(response[:data][:attributes][:revenue]).to eq(45.00)
+      expect(response[:data][:attributes][:revenue]).to eq(13.5)
     end
 
     # it "returns an error if given an invalid merchant id" do

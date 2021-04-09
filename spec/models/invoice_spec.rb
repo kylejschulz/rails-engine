@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Invoice, type: :model do
-  pending "relationships" do
+  describe "relationships" do
     it { should belong_to(:customer)}
     it { should have_many(:invoice_items)}
     it { should have_many(:items).through(:invoice_items) }
@@ -10,7 +10,7 @@ RSpec.describe Invoice, type: :model do
   end
 
   describe "class methods" do
-    it "#revenue_of_unshipped_successful_transactions" doit "#total_revenue" do
+    it "#revenue_of_unshipped_successful_transactions" do
       @merchant = create(:merchant, name: 'merchant 1')
       @customer_1= create(:customer)
       @item_1 = create(:item, merchant_id: @merchant.id, unit_price: 1)
@@ -37,7 +37,7 @@ RSpec.describe Invoice, type: :model do
       @invoice_item_4 = create(:invoice_item, item_id: @item_4.id, invoice_id: @invoice_4.id, quantity: 4, unit_price: 5)
       @transaction_4 = create(:transaction, invoice_id: @invoice_4.id, result: "failed")
 
-      expect(Invoice.revenue_of_unshipped_successful_transactions).to eq(12)
+      expect(Invoice.potential_revenue(2).first.revenue).to eq(12)
     end
   end
 end

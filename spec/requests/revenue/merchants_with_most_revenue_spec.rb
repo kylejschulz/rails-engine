@@ -31,17 +31,16 @@ RSpec.describe "When I visit /api/v1/merchants/most_revenue" do
       @invoice_item_4 = create(:invoice_item, item_id: @item_4.id, invoice_id: @invoice_4.id, unit_price: 10, quantity: 5)
       @transaction_4 = create(:transaction, invoice_id: @invoice_4.id, result: "success")
 
-      get "/api/v1/revenue/merchants/most_revenue?quantity=5"
+      get "/api/v1/revenue/merchants?quantity=5"
 
       response = parse(@response)
-
       expect(response[:data].first).to have_key(:id)
       expect(response[:data].first[:id]).to be_a(String)
       expect(response[:data].first[:id].to_i).to eq(@merchant_4.id)
 
       expect(response[:data].first).to have_key(:type)
       expect(response[:data].first[:type]).to be_a(String)
-      expect(response[:data].first[:type].capitalize).to eq("merchant_revenue")
+      expect(response[:data].first[:type].capitalize).to eq("Merchant_name_revenue")
 
       expect(response[:data].first).to have_key(:attributes)
       expect(response[:data].first[:attributes]).to be_a(Hash)
@@ -50,13 +49,37 @@ RSpec.describe "When I visit /api/v1/merchants/most_revenue" do
       expect(response[:data].first[:attributes][:revenue]).to be_a(Float)
     end
 
-    it "returns an error if given an invalid merchant id" do
-      @merchant = create(:merchant)
-
-      get "/api/v1/revenue/merchants/999999999"
+    it "returns an error if given no param" do
+      get "/api/v1/revenue/merchants"
 
       response = parse(@response)
-      expect(response).to eq({:error=>"Couldn't find Merchant with 'id'=999999999"})
+      expect(response).to eq({:error => {}})
+    end
+
+    it "returns an error if given no param" do
+      get "/api/v1/revenue/merchants"
+      response = parse(@response)
+      expect(response).to eq({:error=> {}})
+    end
+
+    it "returns an error if given string" do
+      get "/api/v1/revenue/merchants?quantity=asdf"
+      response = parse(@response)
+      expect(response).to eq({:error=> {}})
+    end
+
+    it "returns an error if given a quantity of 0" do
+      get "/api/v1/revenue/merchants?quantity=0"
+
+      response = parse(@response)
+      expect(response).to eq({:error=> {}})
+    end
+
+    it "returns an error if given no quantity" do
+      get "/api/v1/revenue/merchants?quantity="
+
+      response = parse(@response)
+      expect(response).to eq({:error=> {}})
     end
   end
 

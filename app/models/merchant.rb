@@ -16,10 +16,12 @@ class Merchant < ApplicationRecord
   end
 
   def total_revenue
+    #what do i have to do to fix this?
+
     transactions
     .where('result = ?', "success")
     .where('status = ?', "shipped")
-    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price)')
+    .pluck('sum(invoice_items.quantity * invoice_items.unit_price)')
     .first
     .round(2)
   end

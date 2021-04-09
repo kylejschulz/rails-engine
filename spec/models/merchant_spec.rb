@@ -32,8 +32,6 @@ RSpec.describe Merchant, type: :model do
       @invoice_2 = create(:invoice, customer_id: @customer_2.id, merchant_id: @merchant.id, status: 'shipped' )
       @invoice_item_2 = create(:invoice_item, item_id: @item_2.id, invoice_id: @invoice_2.id, quantity: 2, unit_price: 1)
       @transaction_2 = create(:transaction, invoice_id: @invoice_2.id, result: "success")
-
-      expect(Merchant.with_most_revenue(2).count).to eq(2)
       expect(Merchant.with_most_revenue(1)).to eq([@merchant_2])
     end
 
