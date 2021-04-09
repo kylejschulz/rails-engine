@@ -49,19 +49,6 @@ RSpec.describe "When I visit /api/v1/merchants/most_revenue" do
       expect(response[:data].first[:attributes][:revenue]).to be_a(Float)
     end
 
-    it "returns an error if given no param" do
-      get "/api/v1/revenue/merchants"
-
-      response = parse(@response)
-      expect(response).to eq({:error => {}})
-    end
-
-    it "returns an error if given no param" do
-      get "/api/v1/revenue/merchants"
-      response = parse(@response)
-      expect(response).to eq({:error=> {}})
-    end
-
     it "returns an error if given string" do
       get "/api/v1/revenue/merchants?quantity=asdf"
       response = parse(@response)
