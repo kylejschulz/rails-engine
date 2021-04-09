@@ -5,12 +5,13 @@ class Invoice < ApplicationRecord
   has_many :merchants, through: :items
   has_many :transactions
 
-  def self.revenue_of_unshipped_successful_transactions
-    joins(:transactions)
-    .where('result = ?', "success")
-    .where('status != ?', "shipped")
+  def self.potential_revenue(quantity)
+    joins(:invoice_items, :transactions)
+    .where('transactions.result = ?', "success")
+    .where('invoices.status != ?', "shipped")
     .select('invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) AS revenue')
     .group(:id)
     .order('revenue DESC')
+    .limit(quantity)
   end
 end

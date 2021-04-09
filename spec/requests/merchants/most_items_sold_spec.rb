@@ -41,13 +41,13 @@ RSpec.describe "When I visit /api/v1/merchants/most_items" do
 
       expect(response[:data].first).to have_key(:type)
       expect(response[:data].first[:type]).to be_a(String)
-      expect(response[:data].first[:type].capitalize).to eq("merchant_revenue")
+      expect(response[:data].first[:type].capitalize).to eq("Most_items")
 
       expect(response[:data].first).to have_key(:attributes)
       expect(response[:data].first[:attributes]).to be_a(Hash)
 
-      expect(response[:data].first[:attributes]).to have_key(:revenue)
-      expect(response[:data].first[:attributes][:revenue]).to be_a(Float)
+      expect(response[:data].first[:attributes]).to have_key(:count)
+      expect(response[:data].first[:attributes][:count]).to be_a(Integer)
     end
 
     it "can visit the page and return the top 3 merchants with most items sold" do
@@ -90,27 +90,27 @@ RSpec.describe "When I visit /api/v1/merchants/most_items" do
 
       expect(response[:data].first).to have_key(:type)
       expect(response[:data].first[:type]).to be_a(String)
-      expect(response[:data].first[:type].capitalize).to eq("merchant_revenue")
+      expect(response[:data].first[:type].capitalize).to eq("Most_items")
 
       expect(response[:data].first).to have_key(:attributes)
       expect(response[:data].first[:attributes]).to be_a(Hash)
 
-      expect(response[:data].first[:attributes]).to have_key(:revenue)
-      expect(response[:data].first[:attributes][:revenue]).to be_a(Float)
+      expect(response[:data].first[:attributes]).to have_key(:count)
+      expect(response[:data].first[:attributes][:count]).to be_a(Integer)
     end
 
     it "returns 5 merchants by default if given empty quantity params" do
-      get "/api/v1/merchants/most_sold?quantity="
+      get "/api/v1/merchants/most_items?quantity="
 
       response = parse(@response)
-      expect(response).to eq({:error=>"Couldn't find Merchant with 'id'=999999999"})
+      expect(response).to eq({:error=> {}})
     end
 
     it "returns 5 merchants by default if given no quantity params" do
-      get "/api/v1/merchants/most_sold?quantity"
+      get "/api/v1/merchants/most_items?quantity"
 
       response = parse(@response)
-      expect(response).to eq({:error=>"Couldn't find Merchant with 'id'=999999999"})
+      expect(response).to eq({:error=> {}})
     end
   end
 
